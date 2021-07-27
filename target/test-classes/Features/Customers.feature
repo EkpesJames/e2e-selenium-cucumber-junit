@@ -7,7 +7,6 @@ Feature: Customer Profile
     And I click on login
     Then user can view dashboard
 
-  @Sanity
   Scenario: Add New Customer
     When user click on customers menu
     And click on customers menu item
@@ -18,7 +17,7 @@ Feature: Customer Profile
     Then user can view confirmation message  "The new customer has been added successfully."
     And close browser
 
-  @Regression
+
   Scenario: Perform Customer Search by email
     When user click on customers menu
     And click on customers menu item
@@ -27,7 +26,7 @@ Feature: Customer Profile
     Then user should find email in the search table
     And close browser
 
-  @Regression
+
   Scenario: Perform Customer Search firstName and lastName
     When user click on customers menu
     And click on customers menu item

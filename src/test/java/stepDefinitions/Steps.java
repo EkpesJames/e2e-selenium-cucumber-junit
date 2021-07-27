@@ -1,64 +1,49 @@
 package stepDefinitions;
 
-import io.cucumber.java.Before;
+import io.cucumber.java.*;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
 import org.junit.Assert;
 import org.openqa.selenium.By;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
+
 import pageObjects.AddCustomerPage;
 import pageObjects.LoginPage;
 import pageObjects.SearchCustomerPage;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Properties;
-import java.util.concurrent.TimeUnit;
 
 
 public class Steps extends BaseClass {
 
+    public WebDriver driver;
+    public LoginPage loginPage;
+    public AddCustomerPage addCustomerPage;
+    public SearchCustomerPage searchCustomerPage;
+
     @Before
     public void setUp() throws IOException {
-        //Reading property file
-        prop = new Properties();
-        FileInputStream fis = new FileInputStream("config.properties");
-        prop.load(fis);
+        driver = initDriver();
+    }
 
-        logger = Logger.getLogger("nopCommerce");
-        PropertyConfigurator.configure("Log4j.properties"); //Added logger
-
-        String br=prop.getProperty("browser");
-        if (br.equalsIgnoreCase("chrome")){
-            options = new ChromeOptions();
-            webDriverManager.chromedriver().setup();
-            //options.addArguments("headless");
-            options.addArguments("--disable-extensions");
-            options.addArguments("--disable-notifications");
-            options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
+    @After
+    public void tearDown(Scenario scenario) {
+        //validate if scenario has failed
+        if (scenario.isFailed()) {
+            final byte[] screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
+            scenario.attach(screenshot, "image/png", "image");
         }
-        else if(br.equalsIgnoreCase("firefox")) {
-            webDriverManager.firefoxdriver().setup();
-            driver = new FirefoxDriver();
-        } else if (br.equalsIgnoreCase("IE")) {
-            webDriverManager.iedriver().setup();
-            driver = new InternetExplorerDriver();
-        }
-
+        quitDriver();
     }
 
     @Given("user launch chrome browser")
     public void user_launch_chrome_browser() {
         logger.info("Launching the browser");
-        driver = new ChromeDriver(options);
+        //driver = new ChromeDriver(options);
     }
 
     @When("user opens the URL {string}")
@@ -99,9 +84,10 @@ public class Steps extends BaseClass {
         Thread.sleep(5000);
     }
 
+
     @And("close browser")
     public void close_browser() {
-        driver.close();
+        logger.info("Place holder for closing browser");
     }
 
     //Add Customer step definitions ................................
@@ -138,10 +124,14 @@ public class Steps extends BaseClass {
     @When("user enter customer info")
     public void user_enter_customer_info() throws InterruptedException {
         String email = randomString() + "@gmail.com";
+        String password = randomString() + "word";
+        String firstName = randomString() + "first";
+        String lastName = randomString() + "last";
+
         addCustomerPage.enterCustomerEmail(email);
-        addCustomerPage.enterCustomerPassword("password1");
-        addCustomerPage.enterCustomerFirstName("Chris");
-        addCustomerPage.enterCustomerLastName("Essien");
+        addCustomerPage.enterCustomerPassword(password);
+        addCustomerPage.enterCustomerFirstName(firstName);
+        addCustomerPage.enterCustomerLastName(lastName);
         addCustomerPage.clickCustomerGender();
         addCustomerPage.enterCustomerDOBParent("7/05/1985");
         addCustomerPage.enterCompanyName("RS-Tech");
