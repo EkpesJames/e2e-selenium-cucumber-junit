@@ -11,7 +11,6 @@ Feature: Login
     Then page title should be "Your store. Login"
     And close browser
 
-  @Sanity
   Scenario Outline: Successful Login with valid credentials data driven
     Given user launch chrome browser
     When user opens the URL "http://admin-demo.nopcommerce.com/login"

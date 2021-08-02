@@ -69,7 +69,7 @@ public class SearchCustomerPage {
     }
 
     public WebElement inputSearchEmail(String mail) {
-        waitHelper.waitForElement(searchEmailField, 30);
+        waitHelper.waitForElement(searchEmailField, 40);
         searchEmailField.clear();
         searchEmailField.sendKeys(mail);
         return searchEmailField;

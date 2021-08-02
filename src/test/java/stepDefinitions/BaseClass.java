@@ -54,7 +54,7 @@ public class BaseClass {
             WebDriverManager.iedriver().setup();
             driver = new InternetExplorerDriver();
         }
-        driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
         return driver;
     }
 
@@ -63,7 +63,11 @@ public class BaseClass {
     }
 
     public void quitDriver() {
-        driver.close();
+        if (driver == null) {
+            return;
+        }
+        driver.quit();
+        driver = null;
     }
 
 }
